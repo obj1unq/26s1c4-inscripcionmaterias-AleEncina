@@ -1,0 +1,55 @@
+class Materia {
+    const materiasCursadas = []
+
+}
+
+class MateriaAprobada {
+    const property materia  
+    var nota  
+
+    method nota() {
+      return nota
+    }
+
+    method esUnaAprobada() = nota > 7
+
+
+}
+
+class Estudiante{
+    const materiasAprobadas = []
+
+    //juan.aprobar(objetos1, 7)
+    method aprobar(_materia, _nota){
+        if(self.aprobo(_materia)){
+            self.error("Ya esta aprobada")
+        }
+        materiasAprobadas.add( new MateriaAprobada (materia=_materia,nota=_nota))
+    }
+
+    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materiaAprobada.esUnaAprobada() } )
+
+}
+
+class Curso {
+
+
+
+
+
+}
+
+
+
+class Carrera {
+
+
+
+
+
+}
+
+
+
+
+
