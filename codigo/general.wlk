@@ -1,7 +1,8 @@
 class Materia {
-    const materiasCursadas = []
+    const property nombreMateria
+    const property cupo
 
-
+    
 }
 
 class MateriaAprobada {
@@ -12,18 +13,17 @@ class MateriaAprobada {
       return nota
     }
 
-    //method esUnaAprobada() = nota.between(7, 10)
-
     method estaLaMateria(unaMateria) = materia == unaMateria
     
 }
 
 class Estudiante{
-    //const nombreEstudiante
+    const property nombreEstudiante
+    const carrerasElegidas = []
     const materiasAprobadas = []
+    const inscripciones = []
 
-    //juan.aprobar(objetos1, 7)
-    method aprobar(_materia, _nota){
+    method aprobar(_materia, _nota){    // -> juan.aprobar(objetos1, 7)
         if(self.aprobo(_materia)){
             self.error("Ya esta aprobada")
         }
@@ -34,43 +34,70 @@ class Estudiante{
 
     method cantMateriasAprobadas() = materiasAprobadas.size()
 
-    method promedio() = if(self.noAproboNingunaMateria()) { 0 } else { materiasAprobadas.map( { materiaAprobada => materiaAprobada.nota() } ).average() }
+    method promedioMateriasAprobadas() = if(self.noAproboNingunaMateria()) { 0 } else { materiasAprobadas.map( { materiaAprobada => materiaAprobada.nota() } ).average() }
     
     method noAproboNingunaMateria() = materiasAprobadas.isEmpty()
 
-    method todasLasMateriasDe(carreras) = carreras.flatMap( { carrera => carrera.materiasObligatorias() } )
+    method todasLasMateriasDeLasCarrerasElegidas() = carrerasElegidas.flatMap( { carreraElegida => carreraElegida.materiasObligatorias() } )
+
+    method inscribir(_materia) {
+        if(!self.puedeInscribirse(_materia)){
+            self.error("Ya esta inscripto o no cumple los requisitos")
+        }
+        inscripciones.add( new Inscripcion (materia=_materia, estudiante=nombreEstudiante, estado=_materia.) )
+    }
+
+    method puedeInscribirse(_materia) = !self.aprobo(_materia) && !inscripciones.any( { inscripcion => inscripcion.estaLaMateria(_materia) } ) 
+    && self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.estaLaMateria(_materia) } ) && _materia.tieneRequisitosCumplidos(self)
 
 
-    
+
+}
+
+
+class Inscripcion {
+    const property materia
+    const property estudiante
+    const property estado
+
+    method tieneRequisitosParaInscribirse(unaMateria, unEstudiante) = unaMateria.tieneRequisitosCumplidos(unEstudiante)
+
+    method estaLaMateria(unaMateria) = materia == unaMateria
+
+    method inscribir(unaMateria, unEstudiante) {
+        if(!unEstudiante.puedeInscribirse(unaMateria)){
+            self.error("Ya esta inscripto o no cumple los requisitos")
+        }
+        unEstudiante.inscripciones.add( new Inscripcion (materia=unaMateria, estudiante=unEstudiante, estado="inscripto") )
+    }
+
+}
+
+class CarreraElegida {
+    const nombreCarrera
+    const materiasObligatorias = []
+    const property estudiante
+
+    method nombreCarrera() {
+        return nombreCarrera
+    }
+
+    method materiasObligatorias(){
+        return materiasObligatorias
+    }
+
+
 }
 
 
 class Carrera {
     const property nombreCarrera
-    const materiasObligatorias
+    const materiasObligatorias = []
 
     method materiasObligatorias(){
         return materiasObligatorias
+
     }
 
 }
 
-
-/*class CarreraElegida {
-    const materiasObligatorias
-
-    method materiasObligatorias(){
-        return materiasObligatorias
-    }
-
-
-}*/
-
-
-class Curso {
-
-
-
-
-
-}
