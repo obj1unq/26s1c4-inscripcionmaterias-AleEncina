@@ -1,4 +1,5 @@
 class Materia {
+    const property rquisitos = []
     const property nombreMateria
     const property cupo
 
@@ -41,35 +42,39 @@ class Estudiante{
     method todasLasMateriasDeLasCarrerasElegidas() = carrerasElegidas.flatMap( { carreraElegida => carreraElegida.materiasObligatorias() } )
 
     method inscribir(_materia) {
-        if(!self.puedeInscribirse(_materia)){
-            self.error("Ya esta inscripto o no cumple los requisitos")
-        }
-        inscripciones.add( new Inscripcion (materia=_materia, estudiante=nombreEstudiante, estado=_materia.) )
+        inscripciones.add( new Inscripcion (materia=_materia, estudiante=nombreEstudiante) )
     }
 
-    method puedeInscribirse(_materia) = !self.aprobo(_materia) && !inscripciones.any( { inscripcion => inscripcion.estaLaMateria(_materia) } ) 
-    && self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.estaLaMateria(_materia) } ) && _materia.tieneRequisitosCumplidos(self)
+    method perteneceAUnaCarreraElegida(unaMateria) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.estaLaMateria(unaMateria) } )
 
+    method estaInscriptoEn(unaMateria) = inscripciones.any( { inscripcion => inscripcion.estaLaMateria(unaMateria) } )
 
-
+    method cumpleRequisitosParaInscribirse(unaMateria) = unaMateria.requisitos().all( { requisito => materiasAprobadas.contains(requisito) } )
 }
 
-
 class Inscripcion {
-    const property materia
     const property estudiante
-    const property estado
+    const property materia
+    const estudiantesInscritos = []
+    const listaDeEspera = []
 
-    method tieneRequisitosParaInscribirse(unaMateria, unEstudiante) = unaMateria.tieneRequisitosCumplidos(unEstudiante)
-
-    method estaLaMateria(unaMateria) = materia == unaMateria
-
-    method inscribir(unaMateria, unEstudiante) {
-        if(!unEstudiante.puedeInscribirse(unaMateria)){
-            self.error("Ya esta inscripto o no cumple los requisitos")
+    method realizarInscripcion() {
+        if (not self.puedeRealizarInscripcion()) {
+            self.error("Ya esta inscripto o no se cumplen los requisitos")
         }
-        unEstudiante.inscripciones.add( new Inscripcion (materia=unaMateria, estudiante=unEstudiante, estado="inscripto") )
+        estudiante.inscribir(materia)
     }
+
+    method puedeRealizarInscripcion() {
+        return 
+            estudiante.perteneceAUnaCarreraElegida(materia) 
+            and not estudiante.aprobo(materia) 
+            and not estudiante.estaInscriptoEn(materia) 
+            and estudiante.cumpleRequisitosParaInscribirse(materia)
+    }
+
+
+
 
 }
 
