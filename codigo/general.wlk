@@ -1,9 +1,38 @@
 class Materia {
-    const property rquisitos = []
-    const property nombreMateria
     const property cupo
+    const requisitos = []
+    const estudiantesInscritos = []
+    const listaDeEspera = []
 
+    method requisitos() {
+        return requisitos
+    }
+
+    method agregarEstudiante(estudiante) {
+        estudiantesInscritos.add(estudiante)
+    }
+
+    method agregarEstudianteEnEspera(estudiante) {
+        listaDeEspera.add(estudiante)
+    }
+
+    method nroEstudiantesInscritos() = estudiantesInscritos.size()
     
+    method removerEstudiante(estudiante) {
+        estudiantesInscritos.remove(estudiante)
+    }
+
+    method removerEstudianteDeEspera(estudiante) {
+        listaDeEspera.remove(estudiante)
+    }
+
+    method hayEstudiantesEnEspera() = !listaDeEspera.isEmpty()
+
+    method agregarPrimerEstudianteEnEspera() {
+        const estudianteEnEspera = listaDeEspera.first()
+        listaDeEspera.remove(estudianteEnEspera)
+        self.agregarEstudiante(estudianteEnEspera)
+}
 }
 
 class MateriaAprobada {
@@ -15,69 +44,47 @@ class MateriaAprobada {
     }
 
     method estaLaMateria(unaMateria) = materia == unaMateria
-    
 }
 
-class Estudiante{
-    const property nombreEstudiante
-    const carrerasElegidas = []
-    const materiasAprobadas = []
-    const inscripciones = []
-
-    method aprobar(_materia, _nota){    // -> juan.aprobar(objetos1, 7)
-        if(self.aprobo(_materia)){
-            self.error("Ya esta aprobada")
-        }
-        materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
-    }
-
-    method aprobo(unaMateria) = materiasAprobadas.any( { materiaAprobada => materiaAprobada.estaLaMateria(unaMateria) } )
-
-    method cantMateriasAprobadas() = materiasAprobadas.size()
-
-    method promedioMateriasAprobadas() = if(self.noAproboNingunaMateria()) { 0 } else { materiasAprobadas.map( { materiaAprobada => materiaAprobada.nota() } ).average() }
-    
-    method noAproboNingunaMateria() = materiasAprobadas.isEmpty()
-
-    method todasLasMateriasDeLasCarrerasElegidas() = carrerasElegidas.flatMap( { carreraElegida => carreraElegida.materiasObligatorias() } )
-
-    method inscribir(_materia) {
-        inscripciones.add( new Inscripcion (materia=_materia, estudiante=nombreEstudiante) )
-    }
-
-    method perteneceAUnaCarreraElegida(unaMateria) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.estaLaMateria(unaMateria) } )
-
-    method estaInscriptoEn(unaMateria) = inscripciones.any( { inscripcion => inscripcion.estaLaMateria(unaMateria) } )
-
-    method cumpleRequisitosParaInscribirse(unaMateria) = unaMateria.requisitos().all( { requisito => materiasAprobadas.contains(requisito) } )
-}
 
 class Inscripcion {
     const property estudiante
     const property materia
-    const estudiantesInscritos = []
-    const listaDeEspera = []
-
+    
     method realizarInscripcion() {
-        if (not self.puedeRealizarInscripcion()) {
+        if (!self.puedeRealizarInscripcion()) {
             self.error("Ya esta inscripto o no se cumplen los requisitos")
         }
         estudiante.inscribir(materia)
+        self.agregarEstudianteInscrito()
     }
 
-    method puedeRealizarInscripcion() {
-        return 
-            estudiante.perteneceAUnaCarreraElegida(materia) 
-            and not estudiante.aprobo(materia) 
-            and not estudiante.estaInscriptoEn(materia) 
-            and estudiante.cumpleRequisitosParaInscribirse(materia)
+    method puedeRealizarInscripcion() = estudiante.perteneceAUnaCarreraElegida(materia) && !estudiante.aprobo(materia) && !estudiante.estaInscriptoEn(materia) 
+    && estudiante.cumpleRequisitosParaInscribirse(materia)
+    
+
+    method agregarEstudianteInscrito() {
+        if (materia.nroEstudiantesInscritos() < materia.cupo()) {
+            materia.agregarEstudiante(estudiante)
+        } else {
+            materia.agregarEstudianteEnEspera(estudiante)
+        }
     }
 
+    method darDeBaja() {
+        estudiante.darDeBaja(materia)
+        materia.removerEstudiante(estudiante)
+        self.puedeAgregarEstudianteEnEspera()
+    }
 
+    method puedeAgregarEstudianteEnEspera() {
+        if (materia.hayEstudiantesEnEspera()) {
+            materia.agregarPrimerEstudianteEnEspera()
+        }
+    }
 
 
 }
-
 class CarreraElegida {
     const nombreCarrera
     const materiasObligatorias = []
