@@ -32,7 +32,10 @@ class Materia {
         const estudianteEnEspera = listaDeEspera.first()
         listaDeEspera.remove(estudianteEnEspera)
         self.agregarEstudiante(estudianteEnEspera)
-}
+    }
+
+    method estaEnEspera() = listaDeEspera.any( { estudiante => estudiante.estaInscriptoEn(self) } )
+
 }
 
 class MateriaAprobada {

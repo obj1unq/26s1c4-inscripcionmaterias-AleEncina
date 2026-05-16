@@ -38,5 +38,7 @@ class Estudiante{
     method estaInscriptoEn(unaMateria) = materiasInscriptas.any( { materia => materia.estaLaMateria(unaMateria) } )
 
     method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => materiasAprobadas.contains(requisito) } )
+
+    method materiasEnEspera() = materiasInscriptas.filter( { materia => materia.estaEnEspera() } )
 }
 
