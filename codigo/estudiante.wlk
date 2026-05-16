@@ -1,8 +1,12 @@
-import general.*
+import carreraYCurso.*
+import materiaYUnaAprobada.*
+import inscripcion.*
+
 class Estudiante{
+    const property nombre
+    const property cursoActual
     const carrerasElegidas = []
     const materiasAprobadas = []
-    const materiasInscriptas = []
 
     method aprobar(_materia, _nota){    // -> juan.aprobar(objetos1, 7)
         if(self.aprobo(_materia)){
@@ -11,7 +15,11 @@ class Estudiante{
         materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
     }
 
-    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materiaAprobada.estaLaMateria(materia) } )
+    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materia.esLaMateria(materiaAprobada) } )
+
+    method elegirCarrera(carrera) {
+        carrerasElegidas.add(carrera)
+    }
 
     method cantMateriasAprobadas() = materiasAprobadas.size()
 
@@ -19,26 +27,31 @@ class Estudiante{
     
     method noAproboNingunaMateria() = materiasAprobadas.isEmpty()
 
-    method todasLasMateriasDeLasCarrerasElegidas() = carrerasElegidas.flatMap( { carreraElegida => carreraElegida.materiasObligatorias() } )
+    method todasLasMateriasDe(carrera) = carrera.materiasObligatorias()
 
-    method inscribir(materia) {
-        materiasInscriptas.add(materia)
-    }
+    method todasLasMateriasDeLasCarrerasElegidas() = carrerasElegidas.flatMap( { carrera => self.todasLasMateriasDe(carrera) } )
 
-    method darDeBaja(materia) {
-        const inscripcionABajar = materiasInscriptas.find( { inscripcion => inscripcion.estaLaMateria(materia) } )
-        if (inscripcionABajar.isEmpty()) {
-            self.error("No esta inscripto en esa materia")
-        }
-        materiasInscriptas.remove(materia)
-    }
+    method puedeInscribirseEn(materia) = self.perteneceAUnaCarreraElegida(materia) && !self.aprobo(materia) 
+    && !self.estaInscriptoEn(materia) && self.cumpleRequisitosParaInscribirse(materia)
 
-    method perteneceAUnaCarreraElegida(materia) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.estaLaMateria(materia) } )
+    method perteneceAUnaCarreraElegida(materia) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materia.esLaMateria(materiaObligatoria) } )
 
-    method estaInscriptoEn(unaMateria) = materiasInscriptas.any( { materia => materia.estaLaMateria(unaMateria) } )
+    method estaInscriptoEn(materia) = materia.estudiantesInscriptos().contains(self.nombre()) || self.estaEnEsperaEn(materia)
+
+    method estaEnEsperaEn(materia) = materia.estudiantesEnEspera().contains(self.nombre())
 
     method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => materiasAprobadas.contains(requisito) } )
 
-    method materiasEnEspera() = materiasInscriptas.filter( { materia => materia.estaEnEspera() } )
+    method inscribir(_materia) {
+        const inscripcion = new Inscripcion (estudiante=self, materia=_materia)
+        inscripcion.realizarInscripcion()
+    }
+
+    method materiasInscriptas() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaInscriptoEn(materia) } )
+
+    method materiasEnEspera() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaEnEsperaEn(materia) } )
+
+    method materiasAInsribir(carrera) = self.todasLasMateriasDe(carrera).filter( { materia => self.puedeInscribirseEn(materia) } )
 }
+
 
