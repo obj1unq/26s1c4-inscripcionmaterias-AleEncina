@@ -14,20 +14,20 @@ class Materia {
 
     method esLaMateria(unaMateria) = self == unaMateria
 
-    method superaElCupo() = estudiantesInscriptos.size() > self.cupo()
+    method superaElCupo() = estudiantesInscriptos.size() >= self.cupo()
     
     method agregarEn(lista, estudiante) {
-        lista.add(estudiante.nombre())
+        lista.add(estudiante)
     }
 
     method removerEn(lista, estudiante) {
         if (self.estaElEstudianteEn(lista, estudiante)) {
-            lista.remove(estudiante.nombre())
+            lista.remove(estudiante)
         }
         //self.error("El estudiante no esta registrado en esta lista")
     }
 
-    method estaElEstudianteEn(lista, estudiante) = lista.contains(estudiante.nombre())
+    method estaElEstudianteEn(lista, estudiante) = lista.contains(estudiante)
 
     method darDeBaja(estudiante) {
         self.quitarloDelRegistro(estudiante)
@@ -44,9 +44,13 @@ class Materia {
     method hayEstudiantesEnEspera() = !estudiantesEnEspera.isEmpty()
 
     method agregarPrimerEstudianteEnEspera() {
-        const primerEstudianteEnEspera = estudiantesEnEspera.first()
-        self.removerEn(estudiantesEnEspera, primerEstudianteEnEspera)
-        self.agregarEn(estudiantesInscriptos, primerEstudianteEnEspera)
+            self.agregarEn(estudiantesInscriptos, estudiantesEnEspera.first())
+            self.removerEn(estudiantesEnEspera, estudiantesEnEspera.first())
+    }
+
+    method inscribir(estudiante) {
+        const inscripcion = new Inscripcion(estudiante=estudiante, materia=self)
+        inscripcion.realizarInscripcion()
     }
 }
 

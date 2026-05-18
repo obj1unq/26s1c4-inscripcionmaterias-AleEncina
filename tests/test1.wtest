@@ -2,8 +2,25 @@ import clases.materiaYUnaAprobada.*
 import clases.estudiante.*
 import clases.inscripcion.*
 import clases.carreraYCurso.*
-import clases.inscripcion.*
 
 describe "Inscripcion a materias" {
-}
+    const baseDeDatos = new Materia (cupo=2,requisitos=[], estudiantesInscriptos=[], estudiantesEnEspera=[])
+    const matematica = new Materia (cupo=2,requisitos=[], estudiantesInscriptos=[], estudiantesEnEspera=[])
+    const objetos1 = new Materia (cupo=2,requisitos=[matematica], estudiantesInscriptos=[], estudiantesEnEspera=[])
+    const objetos2 = new Materia (cupo=2,requisitos=[objetos1, matematica], estudiantesInscriptos=[], estudiantesEnEspera=[])
+    const objetos3 = new Materia (cupo=2,requisitos=[objetos2], estudiantesInscriptos=[], estudiantesEnEspera=[])
 
+    const estudiante1 = new Estudiante (cursoActual="Programacion", carrerasElegidas=[], materiasAprobadas=[])
+    const carrera1 = new Carrera(materiasObligatorias=[baseDeDatos, matematica, objetos1, objetos2, objetos3])
+
+    method initialize() {
+        estudiante1.elegirCarrera(carrera1)
+        baseDeDatos.inscribir(estudiante1)
+    }  
+
+    test "El estudiante se inscribe en una materia sin requisitos y con cupo disponible" {
+
+        assert.equals(true, baseDeDatos.estaElEstudianteEn(baseDeDatos.estudiantesInscriptos(), estudiante1))
+    }
+
+}

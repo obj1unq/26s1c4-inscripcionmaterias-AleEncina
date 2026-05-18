@@ -3,7 +3,6 @@ import materiaYUnaAprobada.*
 import inscripcion.*
 
 class Estudiante{
-    const property nombre
     const property cursoActual
     const carrerasElegidas = []
     const materiasAprobadas = []
@@ -15,7 +14,7 @@ class Estudiante{
         materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
     }
 
-    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materia.esLaMateria(materiaAprobada) } )
+    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materia.esLaMateria(materiaAprobada.materia()) } )
 
     method elegirCarrera(carrera) {
         carrerasElegidas.add(carrera)
@@ -36,11 +35,11 @@ class Estudiante{
 
     method perteneceAUnaCarreraElegida(materia) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materia.esLaMateria(materiaObligatoria) } )
 
-    method estaInscriptoEn(materia) = materia.estudiantesInscriptos().contains(self.nombre()) || self.estaEnEsperaEn(materia)
+    method estaInscriptoEn(materia) = materia.estudiantesInscriptos().contains(self) || self.estaEnEsperaEn(materia)
 
-    method estaEnEsperaEn(materia) = materia.estudiantesEnEspera().contains(self.nombre())
+    method estaEnEsperaEn(materia) = materia.estudiantesEnEspera().contains(self)
 
-    method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => materiasAprobadas.contains(requisito) } )
+    method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => self.aprobo(requisito) } )
 
     method inscribir(_materia) {
         const inscripcion = new Inscripcion (estudiante=self, materia=_materia)
