@@ -4,23 +4,63 @@ import clases.inscripcion.*
 import clases.carreraYCurso.*
 
 describe "Inscripcion a materias" {
-    const baseDeDatos = new Materia (cupo=2,requisitos=[], estudiantesInscriptos=[], estudiantesEnEspera=[])
-    const matematica = new Materia (cupo=2,requisitos=[], estudiantesInscriptos=[], estudiantesEnEspera=[])
-    const objetos1 = new Materia (cupo=2,requisitos=[matematica], estudiantesInscriptos=[], estudiantesEnEspera=[])
-    const objetos2 = new Materia (cupo=2,requisitos=[objetos1, matematica], estudiantesInscriptos=[], estudiantesEnEspera=[])
-    const objetos3 = new Materia (cupo=2,requisitos=[objetos2], estudiantesInscriptos=[], estudiantesEnEspera=[])
+    //carreras
+    const programación = new Carrera(materiasObligatorias=[baseDeDatos, matematica1, elementosDeProgramacion, objetos1, objetos2, objetos3, programacionConcurrente])
+    const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2])
+    //materias 
+    const biologia1 = new Materia (cupo=10)
+    const biologia2 = new Materia (cupo=10,requisitos=[biologia1])
+    const baseDeDatos = new Materia (cupo=10)
+    const matematica1= new Materia (cupo=10)
+    const elementosDeProgramacion = new Materia (cupo=2)
+    const objetos1 = new Materia (cupo=10,requisitos=[matematica1])
+    const objetos2 = new Materia (cupo=3,requisitos=[objetos1, matematica1])
+    const objetos3 = new Materia (cupo=10,requisitos=[objetos2, baseDeDatos])
+    const programacionConcurrente = new Materia (cupo=2,requisitos=[objetos1, baseDeDatos])
+    //estudiantes
+    const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1, baseDeDatos, biologia1])
+    const luisa = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
+    const romina = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
+    const alicia = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
+    const ana = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion])
 
-    const estudiante1 = new Estudiante (cursoActual="Programacion", carrerasElegidas=[], materiasAprobadas=[])
-    const carrera1 = new Carrera(materiasObligatorias=[baseDeDatos, matematica, objetos1, objetos2, objetos3])
 
     method initialize() {
-        estudiante1.elegirCarrera(carrera1)
-        baseDeDatos.inscribir(estudiante1)
+        //objetos2.inscribir(luisa)
+        //objetos2.inscribir(romina)
+        objetos2.inscribir(alicia)
+        //objetos2.inscribir(roque)
     }  
 
-    test "El estudiante se inscribe en una materia sin requisitos y con cupo disponible" {
-
-        assert.equals(true, baseDeDatos.estaElEstudianteEn(baseDeDatos.estudiantesInscriptos(), estudiante1))
+    test "Roque se inscribe en objetos2" {
+        assert.equals(true, roque.puedeInscribirseEn(objetos2))
     }
+
+    test "Roque se inscribe en objetos3 sin haber aprobado objetos2" {
+        assert.equals(false, roque.puedeInscribirseEn(objetos3))
+    }
+
+    test "El estudiante se inscribe en una materia con requisitos cumplidos y con cupo disponible" {
+        luisa.inscribir(objetos1)
+        romina.inscribir(objetos1)
+        objetos1.inscribir(roque)
+
+        assert.equals(false, objetos1.estaElEstudianteEn(objetos1.estudiantesInscriptos(), roque))
+        assert.equals(true, objetos1.estaElEstudianteEn(objetos1.estudiantesEnEspera(), roque))
+    }
+
+    test "El estudiante se inscribe en una materia con requisitos cumplidos pero sin cupo disponible" {
+        luisa.inscribir(objetos1)
+        romina.inscribir(objetos1)
+        objetos1.inscribir(roque)
+
+        assert.equals(false, objetos1.estaElEstudianteEn(objetos1.estudiantesInscriptos(), roque))
+        assert.equals(true, objetos1.estaElEstudianteEn(objetos1.estudiantesEnEspera(), roque))
+    }
+
+    test "El estudiante se inscribe en una materia sin cumplir los requisitos" {
+        assert.that(roque.todasLasMateriasDeLasCarrerasElegidas().contains(biologia1))
+    }
+
 
 }

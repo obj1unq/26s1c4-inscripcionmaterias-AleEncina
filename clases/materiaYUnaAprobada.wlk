@@ -24,7 +24,7 @@ class Materia {
         if (self.estaElEstudianteEn(lista, estudiante)) {
             lista.remove(estudiante)
         }
-        //self.error("El estudiante no esta registrado en esta lista")
+        self.error("El estudiante no esta registrado en esta lista")
     }
 
     method estaElEstudianteEn(lista, estudiante) = lista.contains(estudiante)
@@ -44,8 +44,20 @@ class Materia {
     method hayEstudiantesEnEspera() = !estudiantesEnEspera.isEmpty()
 
     method agregarPrimerEstudianteEnEspera() {
-            self.agregarEn(estudiantesInscriptos, estudiantesEnEspera.first())
-            self.removerEn(estudiantesEnEspera, estudiantesEnEspera.first())
+        self.agregarEn(estudiantesInscriptos, estudiantesEnEspera.first())
+        self.removerEn(estudiantesEnEspera, estudiantesEnEspera.first())
+    }
+
+    method estudiantesInscriptos() {
+        return estudiantesInscriptos
+    }
+
+    method estudiantesEnEspera() {
+        return estudiantesEnEspera
+    }
+
+    method agregarEstudianteEn(lista, estudiante) {
+        self.agregarEn(lista, estudiante)
     }
 
     method inscribir(estudiante) {

@@ -14,7 +14,7 @@ class Estudiante{
         materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
     }
 
-    method aprobo(materia) = materiasAprobadas.any( { materiaAprobada => materia.esLaMateria(materiaAprobada.materia()) } )
+    method aprobo(materia) = materiasAprobadas.any( { ma => materia.esLaMateria(ma) } )
 
     method elegirCarrera(carrera) {
         carrerasElegidas.add(carrera)
@@ -42,8 +42,8 @@ class Estudiante{
     method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => self.aprobo(requisito) } )
 
     method inscribir(_materia) {
-        const inscripcion = new Inscripcion (estudiante=self, materia=_materia)
-        inscripcion.realizarInscripcion()
+        const nuevaInscripcion = new Inscripcion (estudiante=self, materia=_materia)
+        nuevaInscripcion.realizarInscripcion()
     }
 
     method materiasInscriptas() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaInscriptoEn(materia) } )
