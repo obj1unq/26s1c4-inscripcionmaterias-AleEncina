@@ -18,7 +18,8 @@ describe "Inscripcion a materias" {
     const objetos3 = new Materia (cupo=10,requisitos=[objetos2, baseDeDatos])
     const programacionConcurrente = new Materia (cupo=2,requisitos=[objetos1, baseDeDatos])
     //estudiantes
-    const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1, baseDeDatos, biologia1])
+    const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(
+    materia=elementosDeProgramacion, nota=8), matematica1, objetos1, baseDeDatos, biologia1])
     const luisa = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
     const romina = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
     const alicia = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
@@ -28,39 +29,39 @@ describe "Inscripcion a materias" {
     method initialize() {
         //objetos2.inscribir(luisa)
         //objetos2.inscribir(romina)
-        objetos2.inscribir(alicia)
+        //objetos2.inscribir(alicia)
         //objetos2.inscribir(roque)
     }  
 
-    test "Roque se inscribe en objetos2" {
+    test "Roque se inscribe en objetos2 con los requisitos cumplidos y con cupo disponible" {
         assert.equals(true, roque.puedeInscribirseEn(objetos2))
     }
 
-    test "Roque se inscribe en objetos3 sin haber aprobado objetos2" {
+    test "Roque no se puede inscribir en objetos3 sin haber aprobado objetos2 ni en objetos1 al tenerlo aprobado" {
         assert.equals(false, roque.puedeInscribirseEn(objetos3))
+        assert.equals(false, roque.puedeInscribirseEn(objetos1))
     }
 
-    test "El estudiante se inscribe en una materia con requisitos cumplidos y con cupo disponible" {
-        luisa.inscribir(objetos1)
-        romina.inscribir(objetos1)
-        objetos1.inscribir(roque)
-
-        assert.equals(false, objetos1.estaElEstudianteEn(objetos1.estudiantesInscriptos(), roque))
-        assert.equals(true, objetos1.estaElEstudianteEn(objetos1.estudiantesEnEspera(), roque))
+    test "Roque se inscribe en objetos2 con los requisitos cumplidos pero sin cupo disponible" {
+        self.inscribirEstudiantesEnObjetos2()
+        assert.that(objetos2.estudiantesInscriptos().contains(romina))
+        assert.that(objetos2.estudiantesEnEspera().contains(roque))
     }
 
-    test "El estudiante se inscribe en una materia con requisitos cumplidos pero sin cupo disponible" {
-        luisa.inscribir(objetos1)
-        romina.inscribir(objetos1)
-        objetos1.inscribir(roque)
+    test "Romina se da de baja de objetos2 y pasa al primer lugar disponible en inscriptos" {
+        self.inscribirEstudiantesEnObjetos2()
+        objetos2.darDeBaja(romina)
+        assert.that(objetos2.estudiantesInscriptos().contains(roque))
+        assert.that(!objetos2.estudiantesEnEspera().contains(roque))
+        assert.that(!objetos2.estudiantesInscriptos().contains(romina))
+        assert.that(!objetos2.estudiantesEnEspera().contains(romina))
+}
 
-        assert.equals(false, objetos1.estaElEstudianteEn(objetos1.estudiantesInscriptos(), roque))
-        assert.equals(true, objetos1.estaElEstudianteEn(objetos1.estudiantesEnEspera(), roque))
+method inscribirEstudiantesEnObjetos2() {
+        luisa.inscribir(objetos2)
+        romina.inscribir(objetos2)
+        alicia.inscribir(objetos2)
+        roque.inscribir(objetos2)
     }
-
-    test "El estudiante se inscribe en una materia sin cumplir los requisitos" {
-        assert.that(roque.todasLasMateriasDeLasCarrerasElegidas().contains(biologia1))
-    }
-
 
 }

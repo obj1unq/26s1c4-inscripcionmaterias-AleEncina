@@ -22,9 +22,8 @@ class Materia {
 
     method removerEn(lista, estudiante) {
         if (self.estaElEstudianteEn(lista, estudiante)) {
-            lista.remove(estudiante)
-        }
-        self.error("El estudiante no esta registrado en esta lista")
+            lista.remove(estudiante) 
+        } 
     }
 
     method estaElEstudianteEn(lista, estudiante) = lista.contains(estudiante)

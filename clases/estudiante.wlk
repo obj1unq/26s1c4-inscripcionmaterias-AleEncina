@@ -14,7 +14,7 @@ class Estudiante{
         materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
     }
 
-    method aprobo(materia) = materiasAprobadas.any( { ma => materia.esLaMateria(ma) } )
+    method aprobo(materia) = materiasAprobadas.any( { unaMateria => materia.esLaMateria(unaMateria) } )
 
     method elegirCarrera(carrera) {
         carrerasElegidas.add(carrera)
