@@ -5,7 +5,6 @@ class Carrera {
         return materiasObligatorias
 
     }
-
 }
 
 class Curso {

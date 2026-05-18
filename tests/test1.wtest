@@ -1,0 +1,9 @@
+import clases.materiaYUnaAprobada.*
+import clases.estudiante.*
+import clases.inscripcion.*
+import clases.carreraYCurso.*
+import clases.inscripcion.*
+
+describe "Inscripcion a materias" {
+}
+
