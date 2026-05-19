@@ -1,5 +1,5 @@
-import carreraYCurso.*
 import estudiante.*
+import extras.*
 
 class Materia {
     const property cupo
@@ -65,11 +65,3 @@ class Materia {
     }
 }
 
-class MateriaAprobada {
-    const property materia  
-    const nota  
-
-    method nota() {
-      return nota
-    }
-}

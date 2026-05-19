@@ -1,5 +1,5 @@
-import carreraYCurso.*
-import materiaYUnaAprobada.*
+import extras.*
+import materia.*
 
 class Estudiante{
     const property cursoActual
@@ -39,7 +39,7 @@ class Estudiante{
 
     method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => self.aprobo(requisito) } )
 
-    method inscribirA(materia) {
+    method inscribirEn(materia) {
         materia.inscribirA(self)
     }
 

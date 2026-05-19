@@ -1,6 +1,6 @@
-import clases.materiaYUnaAprobada.*
-import clases.estudiante.*
-import clases.carreraYCurso.*
+import estudiante.*
+import extras.*
+import materia.*
 
 describe "Inscripcion a materias" {
     //carreras
@@ -73,10 +73,10 @@ describe "Inscripcion a materias" {
 }
 
 method inscribirEstudiantesEnObjetos2() {
-    luisa.inscribirA(objetos2)
-    romina.inscribirA(objetos2)
-    alicia.inscribirA(objetos2)
-    roque.inscribirA(objetos2)
+    luisa.inscribirEn(objetos2)
+    romina.inscribirEn(objetos2)
+    alicia.inscribirEn(objetos2)
+    roque.inscribirEn(objetos2)
 }
 
 }
