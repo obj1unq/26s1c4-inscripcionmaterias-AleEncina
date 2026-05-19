@@ -1,6 +1,5 @@
 import clases.materiaYUnaAprobada.*
 import clases.estudiante.*
-import clases.inscripcion.*
 import clases.carreraYCurso.*
 
 describe "Inscripcion a materias" {

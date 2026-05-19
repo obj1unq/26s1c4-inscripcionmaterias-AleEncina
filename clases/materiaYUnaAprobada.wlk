@@ -1,6 +1,5 @@
 import carreraYCurso.*
 import estudiante.*
-import inscripcion.*
 
 class Materia {
     const property cupo

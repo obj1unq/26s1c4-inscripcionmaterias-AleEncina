@@ -1,6 +1,5 @@
 import carreraYCurso.*
 import materiaYUnaAprobada.*
-import inscripcion.*
 
 class Estudiante{
     const property cursoActual
