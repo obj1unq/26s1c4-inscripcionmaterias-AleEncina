@@ -6,25 +6,41 @@ import clases.carreraYCurso.*
 describe "Inscripcion a materias" {
     //carreras
     const programación = new Carrera(materiasObligatorias=[baseDeDatos, matematica1, elementosDeProgramacion, objetos1, objetos2, objetos3, programacionConcurrente])
+    
     const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2])
+    
     //materias 
     const biologia1 = new Materia (cupo=10)
+    
     const biologia2 = new Materia (cupo=10,requisitos=[biologia1])
+    
     const baseDeDatos = new Materia (cupo=10)
+    
     const matematica1= new Materia (cupo=10)
+    
     const elementosDeProgramacion = new Materia (cupo=2)
+    
     const objetos1 = new Materia (cupo=10,requisitos=[matematica1])
+    
     const objetos2 = new Materia (cupo=3,requisitos=[objetos1, matematica1])
+    
     const objetos3 = new Materia (cupo=10,requisitos=[objetos2, baseDeDatos])
+    
     const programacionConcurrente = new Materia (cupo=2,requisitos=[objetos1, baseDeDatos])
+    
     //estudiantes
-    const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(
-    materia=elementosDeProgramacion, nota=8), matematica1, objetos1, baseDeDatos, biologia1])
-    const luisa = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
-    const romina = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
-    const alicia = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion, matematica1, objetos1])
-    const ana = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[elementosDeProgramacion])
-
+    const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=8), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7), new MateriaAprobada(materia=baseDeDatos, nota=8), 
+    new MateriaAprobada(materia=biologia1, nota=10) ])
+    
+    const luisa = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=10), new MateriaAprobada(materia=matematica1, nota=8), new MateriaAprobada(materia=objetos1, nota=9) ])
+    
+    const romina = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=7), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7) ])
+    
+    const alicia =  new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=9), new MateriaAprobada(materia=matematica1, nota=10), new MateriaAprobada(materia=objetos1, nota=8) ])
 
     method initialize() {
         //objetos2.inscribir(luisa)
@@ -48,7 +64,7 @@ describe "Inscripcion a materias" {
         assert.that(objetos2.estudiantesEnEspera().contains(roque))
     }
 
-    test "Romina se da de baja de objetos2 y pasa al primer lugar disponible en inscriptos" {
+    test "Romina se baja de objetos2 y Roque consigue un cupo en objetos2" {
         self.inscribirEstudiantesEnObjetos2()
         objetos2.darDeBaja(romina)
         assert.that(objetos2.estudiantesInscriptos().contains(roque))
@@ -58,10 +74,10 @@ describe "Inscripcion a materias" {
 }
 
 method inscribirEstudiantesEnObjetos2() {
-        luisa.inscribir(objetos2)
-        romina.inscribir(objetos2)
-        alicia.inscribir(objetos2)
-        roque.inscribir(objetos2)
-    }
+    luisa.inscribirA(objetos2)
+    romina.inscribirA(objetos2)
+    alicia.inscribirA(objetos2)
+    roque.inscribirA(objetos2)
+}
 
 }

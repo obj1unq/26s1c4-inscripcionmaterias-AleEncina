@@ -14,12 +14,11 @@ class Estudiante{
         materiasAprobadas.add( new MateriaAprobada (materia=_materia, nota=_nota))
     }
 
-    method aprobo(materia) = materiasAprobadas.any( { unaMateria => materia.esLaMateria(unaMateria) } )
+    method aprobo(unaMateria) = materiasAprobadas.map( { materiaAprobada => materiaAprobada.materia() } ).contains(unaMateria) //map y contains
 
     method elegirCarrera(carrera) {
         carrerasElegidas.add(carrera)
     }
-
     method cantMateriasAprobadas() = materiasAprobadas.size()
 
     method promedioMateriasAprobadas() = if(self.noAproboNingunaMateria()) { 0 } else { materiasAprobadas.map( { materiaAprobada => materiaAprobada.nota() } ).average() }
@@ -33,7 +32,7 @@ class Estudiante{
     method puedeInscribirseEn(materia) = self.perteneceAUnaCarreraElegida(materia) && !self.aprobo(materia) 
     && !self.estaInscriptoEn(materia) && self.cumpleRequisitosParaInscribirse(materia)
 
-    method perteneceAUnaCarreraElegida(materia) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materia.esLaMateria(materiaObligatoria) } )
+    method perteneceAUnaCarreraElegida(unaMateria) = self.todasLasMateriasDeLasCarrerasElegidas().any( { materiaObligatoria => materiaObligatoria.materia() == unaMateria } )
 
     method estaInscriptoEn(materia) = materia.estudiantesInscriptos().contains(self) || self.estaEnEsperaEn(materia)
 
@@ -41,9 +40,8 @@ class Estudiante{
 
     method cumpleRequisitosParaInscribirse(materia) = materia.requisitos().all( { requisito => self.aprobo(requisito) } )
 
-    method inscribir(_materia) {
-        const nuevaInscripcion = new Inscripcion (estudiante=self, materia=_materia)
-        nuevaInscripcion.realizarInscripcion()
+    method inscribirA(materia) {
+        materia.inscribirA(self)
     }
 
     method materiasInscriptas() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaInscriptoEn(materia) } )

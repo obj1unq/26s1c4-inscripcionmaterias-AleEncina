@@ -12,30 +12,32 @@ class Materia {
         return requisitos
     }
 
-    method esLaMateria(unaMateria) = self == unaMateria
+    method materia() {
+        return self
+    }
 
     method superaElCupo() = estudiantesInscriptos.size() >= self.cupo()
     
-    method agregarEn(lista, estudiante) {
-        lista.add(estudiante)
+    method agregar(estudiante) {
+        if (self.superaElCupo()) {
+            estudiantesEnEspera.add(estudiante)
+        } else {
+            estudiantesInscriptos.add(estudiante)
+        }
     }
 
-    method removerEn(lista, estudiante) {
-        if (self.estaElEstudianteEn(lista, estudiante)) {
-            lista.remove(estudiante) 
-        } 
+    method remover(estudiante) {
+        if (self.estaElEstudianteEn(estudiantesInscriptos, estudiante)) {
+            estudiantesInscriptos.remove(estudiante) 
+        } else if (self.estaElEstudianteEn(estudiantesEnEspera, estudiante))
+            estudiantesEnEspera.remove(estudiante)
     }
 
     method estaElEstudianteEn(lista, estudiante) = lista.contains(estudiante)
 
     method darDeBaja(estudiante) {
-        self.quitarloDelRegistro(estudiante)
+        self.remover(estudiante)
         self.puedeAgregarPrimerEstudianteEnEspera()
-    }
-
-    method quitarloDelRegistro(estudiante) {
-        self.removerEn(estudiantesInscriptos, estudiante)
-        self.removerEn(estudiantesEnEspera, estudiante)
     }
     
     method puedeAgregarPrimerEstudianteEnEspera() = if(self.hayEstudiantesEnEspera()) { self.agregarPrimerEstudianteEnEspera() }
@@ -43,8 +45,9 @@ class Materia {
     method hayEstudiantesEnEspera() = !estudiantesEnEspera.isEmpty()
 
     method agregarPrimerEstudianteEnEspera() {
-        self.agregarEn(estudiantesInscriptos, estudiantesEnEspera.first())
-        self.removerEn(estudiantesEnEspera, estudiantesEnEspera.first())
+        const primerEstudianteEnEspera = estudiantesEnEspera.first()
+        self.remover(primerEstudianteEnEspera)
+        self.agregar(primerEstudianteEnEspera)
     }
 
     method estudiantesInscriptos() {
@@ -55,13 +58,11 @@ class Materia {
         return estudiantesEnEspera
     }
 
-    method agregarEstudianteEn(lista, estudiante) {
-        self.agregarEn(lista, estudiante)
-    }
-
-    method inscribir(estudiante) {
-        const inscripcion = new Inscripcion(estudiante=estudiante, materia=self)
-        inscripcion.realizarInscripcion()
+    method inscribirA(estudiante) {
+        if (!estudiante.puedeInscribirseEn(self)) {
+            self.error("Ya esta inscripto o no se cumplen los requisitos")
+        }
+        self.agregar(estudiante)
     }
 }
 
