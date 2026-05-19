@@ -930,3 +930,5 @@
 {"level":"info","message":"⌛ Building environment","timeElapsed":127,"timestamp":"2026-05-18T23:55:00.537Z"}
 {"level":"info","message":"⌛ Validating tests/test1.wtest","timeElapsed":130,"timestamp":"2026-05-18T23:55:00.668Z"}
 {"level":"info","message":"🧪 Test runner executed on c:\\Users\\alenc\\OneDrive\\Desktop\\Estudios\\Objetos 1\\ProyectosWollok\\26s1c4-inscripcionmaterias-AleEncina","result":{"errored":0,"failed":0,"ok":1},"testsFailed":[],"timeElapsed":511,"timestamp":"2026-05-18T23:55:10.149Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":102,"timestamp":"2026-05-18T23:55:18.310Z"}
+{"level":"info","message":"⌛ Validating clases/materiaYUnaAprobada.wlk","timeElapsed":160,"timestamp":"2026-05-18T23:55:18.473Z"}
