@@ -9,23 +9,27 @@ describe "Inscripcion a materias" {
     const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2])
     
     //materias 
-    const biologia1 = new Materia (cupo=10)
+    const biologia1 = new Materia (cupo=30, creditos=20, anio=1, requisitos= new Requisito(tipo="nada", valor=null), estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const biologia2 = new Materia (cupo=10,requisitos=[biologia1])
+    const biologia2 = new Materia (cupo=30, creditos=40, anio=2, requisitos= new Requisito(tipo="correlativa", valor=[biologia1]), estrategiaParaListaDeEspera= "elitista")
     
-    const baseDeDatos = new Materia (cupo=10)
+    const baseDeDatos = new Materia (cupo=30, creditos=20, anio=1, requisitos= new Requisito(tipo="nada", valor=null), estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const matematica1= new Materia (cupo=10)
+    const matematica1= new Materia (cupo=30, creditos=20, anio=1, requisitos= new Requisito(tipo="nada", valor=null), estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const elementosDeProgramacion = new Materia (cupo=2)
+    const elementosDeProgramacion = new Materia (cupo=40, creditos=10, anio=1, requisitos= new Requisito(tipo="nada", valor=null), estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const objetos1 = new Materia (cupo=10,requisitos=[matematica1])
+    const objetos1 = new Materia (cupo=30, creditos=20, anio=2, requisitos= new Requisito(tipo="correlativa", valor=[elementosDeProgramacion]), 
+    estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const objetos2 = new Materia (cupo=3,requisitos=[objetos1, matematica1])
-    
-    const objetos3 = new Materia (cupo=10,requisitos=[objetos2, baseDeDatos])
-    
-    const programacionConcurrente = new Materia (cupo=2,requisitos=[objetos1, baseDeDatos])
+    const objetos2 = new Materia (cupo=3, creditos=40, anio=2, requisitos= new Requisito(tipo="correlativa", valor=[elementosDeProgramacion,objetos1, matematica1]), 
+    estrategiaParaListaDeEspera= "ordenDeLlegada")
+                                   
+    const objetos3 = new Materia (cupo=20, creditos=80, anio=3, requisitos= new Requisito(tipo="correlativa", valor=[objetos2, baseDeDatos]), 
+    estrategiaParaListaDeEspera= "ordenDeLlegada")
+                                    
+    const programacionConcurrente = new Materia (cupo=30, creditos=40, anio=2, requisitos= new Requisito(tipo="correlativa", valor=[objetos1, baseDeDatos]), 
+    estrategiaParaListaDeEspera= "ordenDeLlegada")
     
     //estudiantes
     const roque = new Estudiante (cursoActual="Programacion", carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 

@@ -3,8 +3,11 @@ import extras.*
 
 class Materia {
     const property cupo
-    const requisitos = []
+    const property creditos
+    const property anio
+    const property requisitos                       // new Requisito (tipo + valor)
     const estudiantesInscriptos = []
+    const property estrategiaParaListaDeEspera      //ordenDeLlegada, elitista, gradoDeAvance
     const estudiantesEnEspera = []
 
     method requisitos() {
@@ -63,5 +66,7 @@ class Materia {
         }
         self.agregar(estudiante)
     }
+
+
 }
 

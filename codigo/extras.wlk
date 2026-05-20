@@ -20,6 +20,15 @@ class MateriaAprobada {
     }
 }
 
+class Requisito {
+    const property tipo         //correlativa, cŕedito, anio o nada.
+    const valor            //[materia...], numCredito, numAnio o null
+
+    method valor(){
+        return valor
+    }
+}
+
 object universidad {
     const carreras = []
 
