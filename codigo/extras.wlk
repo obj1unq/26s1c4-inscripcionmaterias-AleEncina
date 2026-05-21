@@ -4,10 +4,13 @@ class Carrera {
     method materiasObligatorias(){
         return materiasObligatorias
     }
+
+    method materiasDeAnio(unAnio) {
+    return materiasObligatorias.filter({ m => m.anio() == unAnio })
+  }
 }
 
 class Curso {
-    const property nombre
     const property año
 }
 
@@ -20,14 +23,26 @@ class MateriaAprobada {
     }
 }
 
-class Requisito {
-    const property tipo         //correlativa, cŕedito, anio o nada.
-    const valor            //[materia...], numCredito, numAnio o null
+class RequisitoCorrelativas {
+    const property materias 
 
-    method valor(){
-        return valor
-    }
+    method cumple(alumno) = materias.all({ unaMateria => alumno.aprobo(unaMateria) })              //Polimorfica con los otros requisitos
 }
+
+class RequisitoCreditos {
+    const property creditosNecesarios // Número de créditos
+
+    method cumple(alumno) = alumno.creditosObtenidos() >= creditosNecesarios                       //Polimorfica con los otros requisitos
+}
+
+class RequisitoAnio {
+    const property anioRequerido
+    const property carrera // Objeto que tiene la lista de todas las materias
+
+    method cumple(alumno) = carrera.materiasDeAnio(anioRequerido).all({ m => alumno.aprobo(m) })
+}
+
+
 
 object universidad {
     const carreras = []

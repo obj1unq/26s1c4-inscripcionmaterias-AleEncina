@@ -5,17 +5,13 @@ class Materia {
     const property cupo
     const property creditos
     const property anio
-    const property requisitos                       // new Requisito (tipo + valor)
+    const property requisito                       // new Requisito
     const estudiantesInscriptos = []
     const property estrategiaParaListaDeEspera      //ordenDeLlegada, elitista, gradoDeAvance
     const estudiantesEnEspera = []
 
-    method requisitos() {
-        return requisitos
-    }
-
-    method materia() {
-        return self
+    method requisito() {
+        return requisito
     }
 
     method superaElCupo() = estudiantesInscriptos.size() >= self.cupo()
@@ -66,7 +62,5 @@ class Materia {
         }
         self.agregar(estudiante)
     }
-
-
 }
 
