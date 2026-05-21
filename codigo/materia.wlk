@@ -1,13 +1,10 @@
-import estudiante.*
-import extras.*
-
 class Materia {
     const property cupo
     const property creditos
     const property anio
     const property requisito                       // new Requisito
     const estudiantesInscriptos = []
-    const property estrategiaParaListaDeEspera      //ordenDeLlegada, elitista, gradoDeAvance
+    const property estrategiaParaListaDeEspera      //new estrategia
     const estudiantesEnEspera = []
 
     method requisito() {
@@ -18,7 +15,7 @@ class Materia {
     
     method agregar(estudiante) {
         if (self.superaElCupo()) {
-            estudiantesEnEspera.add(estudiante)
+            estrategiaParaListaDeEspera.agregarALaListaDeEspera(estudiante, self)
         } else {
             estudiantesInscriptos.add(estudiante)
         }

@@ -1,0 +1,62 @@
+import estudiante.*
+import estrategiasYRequisitos.*
+import extras.*
+import materia.*
+
+describe "Inscripcion a materias de derecho" {
+    //materias de derecho
+    const latin = new Materia(cupo=30, creditos=50, anio=2, requisito=(new RequisitoCreditos (creditosNecesarios=25)), 
+    estrategiaParaListaDeEspera= new EstrategiaElitista())
+
+    const derechoRomano = new Materia(cupo=20, creditos=100, anio=3, requisito=(new RequisitoAnio (anioRequerido=2, carrera=derecho)), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    const historiaDelDerechoArgentino = new Materia(cupo=30, creditos=10, anio=1, requisito=(new RequisitoCreditos (creditosNecesarios=25)), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    const derechoPenal1 = new Materia(cupo=30, creditos=10, anio=1, requisito=(new RequisitoCreditos (creditosNecesarios=25)), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    const derechoPenal2 = new Materia(cupo=30, creditos=10, anio=1, requisito=(new RequisitoCreditos (creditosNecesarios=25)), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    //carrera de derecho
+    const derecho = new Carrera(materiasObligatorias=[latin, /*derechoRomano,*/ historiaDelDerechoArgentino, derechoPenal1, derechoPenal2])
+
+    //estudiantes de derecho 
+    const alejandro = new Estudiante (creditosObtenidos=0, carrerasElegidas=[derecho], materiasAprobadas=[])
+    
+    const camila = new Estudiante (creditosObtenidos=50, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=10), new MateriaAprobada(materia=matematica1, nota=8), new MateriaAprobada(materia=objetos1, nota=9) ])
+    
+    const juan = new Estudiante (creditosObtenidos=50, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=7), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7) ])
+    
+    const laura = new Estudiante (creditosObtenidos=50, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=9), new MateriaAprobada(materia=matematica1, nota=10), new MateriaAprobada(materia=objetos1, nota=8) ])
+
+    const sebastian = new Estudiante (creditosObtenidos=50, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=8), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7) ])
+
+    method initialize() {
+        self.agregarMateriasConRequisitoAnio()
+        self.inscribir(derechoPenal1, camila)
+        self.inscribir(derechoPenal1, juan)
+        self.inscribir(derechoPenal1, laura)
+        self.inscribir(derechoPenal1, alejandro)
+    }
+
+    method agregarMateriasConRequisitoAnio() {  //El requisito de anio tiene una variable carrera que si se carga esta rompe el codigo
+        derecho.materiasObligatorias().add(derechoRomano)
+    }
+
+    method inscribir(materia, alumno) {
+        materia.inscribirA(alumno)
+    }
+
+    test "Alejandro se queda en lista de espera" {
+        assert.that(derechoPenal1.estaEnListaDeEspera(alejandro))
+    }
+
+} 
+   

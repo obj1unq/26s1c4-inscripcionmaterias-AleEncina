@@ -2,7 +2,6 @@ import extras.*
 import materia.*
 
 class Estudiante{
-    //const property cursoActual
     const property creditosObtenidos
     const carrerasElegidas = []
     const materiasAprobadas = [] 
@@ -50,11 +49,17 @@ class Estudiante{
         materia.inscribirA(self)
     }
 
-    method materiasInscriptas() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaInscriptoEn(materia) } )
+    method materiasInscriptas() {
+        return self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaInscriptoEn(materia) } )
+    }
 
-    method materiasEnEspera() = self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaEnEsperaEn(materia) } )
+    method materiasEnEspera() {
+        return self.todasLasMateriasDeLasCarrerasElegidas().filter( { materia => self.estaEnEsperaEn(materia) } )
+    }
 
-    method materiasAInsribir(carrera) = self.todasLasMateriasDe(carrera).filter( { materia => self.puedeInscribirseEn(materia) } )
+    method materiasAInsribir(carrera) {
+        return self.todasLasMateriasDe(carrera).filter( { materia => self.puedeInscribirseEn(materia) } )   
+    }
 }
 
 
