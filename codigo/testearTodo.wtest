@@ -6,12 +6,12 @@ describe "Inscripcion a materias" {
     //carreras
     const programación = new Carrera(materiasObligatorias=[baseDeDatos, matematica1, elementosDeProgramacion, objetos1, objetos2, objetos3, programacionConcurrente])
     
-    const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2])   
+    const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2, biologia3])   
     
     //materias 
     const biologia1 = new Materia (cupo=30, creditos=10, anio=1, requisito=(new RequisitoCreditos (creditosNecesarios=25)), estrategiaParaListaDeEspera= "ordenDeLlegada")
     
-    const biologia2 = new Materia (cupo=30, creditos=40, anio=2, requisito=(new RequisitoCorrelativas (materias=[biologia1])), estrategiaParaListaDeEspera= "elitista")
+    const biologia2 = new Materia (cupo=30, creditos=40, anio=1, requisito=(new RequisitoCorrelativas (materias=[biologia1])), estrategiaParaListaDeEspera= "elitista")
     
     const baseDeDatos = new Materia (cupo=30, creditos=20, anio=1, requisito=null, estrategiaParaListaDeEspera= "ordenDeLlegada")
     
@@ -30,6 +30,9 @@ describe "Inscripcion a materias" {
     const programacionConcurrente = new Materia (cupo=30, creditos=40, anio=2, requisito=(new RequisitoCorrelativas (materias=[objetos1, baseDeDatos])), 
     estrategiaParaListaDeEspera= "ordenDeLlegada")
 
+    const biologia3 = new Materia (cupo=20, creditos=80, anio=3, requisito=(new RequisitoAnio (anioRequerido=1)), 
+    estrategiaParaListaDeEspera= "ordenDeLlegada")
+
     //estudiantes
     const roque = new Estudiante (creditosObtenidos=60, carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
     nota=8), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7), new MateriaAprobada(materia=baseDeDatos, nota=8), 
@@ -44,7 +47,8 @@ describe "Inscripcion a materias" {
     const alicia = new Estudiante (creditosObtenidos=50, carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
     nota=9), new MateriaAprobada(materia=matematica1, nota=10), new MateriaAprobada(materia=objetos1, nota=8) ])
 
-    const mateo = new Estudiante (creditosObtenidos=0, carrerasElegidas=[medicina], materiasAprobadas=[])
+    const mateo = new Estudiante (creditosObtenidos=50, carrerasElegidas=[medicina], materiasAprobadas=[new MateriaAprobada(materia=biologia1, nota=9), 
+    new MateriaAprobada(materia=biologia2, nota=10)])
 
     method initialize() {
         objetos2.inscribirA(luisa)
@@ -76,9 +80,7 @@ describe "Inscripcion a materias" {
         assert.that(!objetos2.estudiantesEnEspera().contains(romina))
     }
 
-    test "Mateo quiere inscribirse a biologia1" {
-        assert.equals(false, mateo.puedeInscribirseEn(biologia1))
+    test "Mateo quiere inscribirse a biologia3" {
+        assert.equals(true, mateo.puedeInscribirseEn(biologia3))
     }
-
-
 }

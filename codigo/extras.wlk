@@ -37,9 +37,14 @@ class RequisitoCreditos {
 
 class RequisitoAnio {
     const property anioRequerido
-    const property carrera // Objeto que tiene la lista de todas las materias
+    //const property carrera // Objeto que tiene la lista de todas las materias
 
-    method cumple(alumno) = carrera.materiasDeAnio(anioRequerido).all({ m => alumno.aprobo(m) })
+    method cumple(alumno) = self.materiasDeUnAnio(Carrera, alumno).all({ m => alumno.aprobo(m) })
+
+    method materiasDeUnAnio(carrera, alumno) {
+      const carreraDelAlumno = alumno.carrerasElegidas().first()
+      return carreraDelAlumno.materiasObligatorias().filter({ m => m.anio() == anioRequerido })
+    }
 }
 
 
