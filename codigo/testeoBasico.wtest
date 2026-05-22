@@ -1,0 +1,78 @@
+import estudiante.*
+import estrategiasYRequisitosDeUnaMateria.*
+import extras.*
+import materia.*
+
+describe "Inscripcion a materias" {
+    //carreras
+    const programación = new Carrera(materiasObligatorias=[baseDeDatos, matematica1, elementosDeProgramacion, objetos1, objetos2, objetos3, programacionConcurrente])
+    
+    const medicina = new Carrera(materiasObligatorias=[biologia1, biologia2])   
+    
+    //materias 
+    const biologia1 = new Materia (cupo=30, creditos=10, anio=1, requisito=(new RequisitoCreditos (creditosNecesarios=25)), estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+    
+    const biologia2 = new Materia (cupo=30, creditos=40, anio=1, requisito=(new RequisitoCorrelativas (materias=[biologia1])), estrategiaParaListaDeEspera= new EstrategiaElitista())
+    
+    const baseDeDatos = new Materia (cupo=30, creditos=20, anio=1, requisito=null, estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+    
+    const matematica1= new Materia (cupo=30, creditos=20, anio=1, requisito=null, estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+    
+    const elementosDeProgramacion = new Materia (cupo=40, creditos=10, anio=1, requisito=null, estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+    
+    const objetos1 = new Materia (cupo=30, creditos=20, anio=2, requisito=(new RequisitoCorrelativas (materias=[elementosDeProgramacion])), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+    
+    const objetos2 = new Materia (cupo=3, creditos=40, anio=2, requisito=(new RequisitoCorrelativas (materias=[elementosDeProgramacion,objetos1, matematica1])), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+                                   
+    const objetos3 = new Materia (cupo=20, creditos=80, anio=3, requisito=(new RequisitoCorrelativas (materias=[objetos2, baseDeDatos])), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+                                    
+    const programacionConcurrente = new Materia (cupo=30, creditos=40, anio=2, requisito=(new RequisitoCorrelativas (materias=[objetos1, baseDeDatos])), 
+    estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    //estudiantes
+    const roque = new Estudiante (creditosObtenidos=60, carrerasElegidas=[programación, medicina], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=8), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7), new MateriaAprobada(materia=baseDeDatos, nota=8), 
+    new MateriaAprobada(materia=biologia1, nota=10) ])
+    
+    const luisa = new Estudiante (creditosObtenidos=50, carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=10), new MateriaAprobada(materia=matematica1, nota=8), new MateriaAprobada(materia=objetos1, nota=9) ])
+    
+    const romina = new Estudiante (creditosObtenidos=50, carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=7), new MateriaAprobada(materia=matematica1, nota=9), new MateriaAprobada(materia=objetos1, nota=7) ])
+    
+    const alicia = new Estudiante (creditosObtenidos=50, carrerasElegidas=[programación], materiasAprobadas=[ new MateriaAprobada(materia=elementosDeProgramacion, 
+    nota=9), new MateriaAprobada(materia=matematica1, nota=10), new MateriaAprobada(materia=objetos1, nota=8) ])
+
+    method initialize() {
+        objetos2.inscribirA(luisa)
+        objetos2.inscribirA(romina)
+        objetos2.inscribirA(alicia)
+    }  
+
+    test "Roque se inscribe en objetos2 con los requisitos cumplidos y con cupo disponible" {
+        assert.equals(true, roque.puedeInscribirseEn(objetos2))
+    }
+
+    test "Roque no se puede inscribir en objetos3 sin haber aprobado objetos2 ni en objetos1 al tenerlo aprobado" {
+        assert.equals(false, roque.puedeInscribirseEn(objetos3))
+        assert.equals(false, roque.puedeInscribirseEn(objetos1))
+    }
+
+    test "Roque se inscribe en objetos2 con los requisitos cumplidos pero sin cupo disponible" {
+        objetos2.inscribirA(roque)
+        assert.that(objetos2.estudiantesInscriptos().contains(romina))
+        assert.that(objetos2.estudiantesEnEspera().contains(roque))
+    }
+
+    test "Romina se baja de objetos2 y Roque consigue un cupo en objetos2" {
+        objetos2.inscribirA(roque)
+        objetos2.darDeBaja(romina)
+        assert.that(objetos2.estudiantesInscriptos().contains(roque))
+        assert.that(!objetos2.estudiantesEnEspera().contains(roque))
+        assert.that(!objetos2.estudiantesInscriptos().contains(romina))
+        assert.that(!objetos2.estudiantesEnEspera().contains(romina))
+    }
+}

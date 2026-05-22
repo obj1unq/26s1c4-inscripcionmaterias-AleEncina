@@ -1,0 +1,84 @@
+import estudiante.*
+import estrategiasYRequisitosDeUnaMateria.*
+import extras.*
+import materia.*
+
+describe "Inscripcion a materias de derecho" {
+    //materias de derecho
+    const latin = new Materia(cupo=1, creditos=50, anio=2, requisito=(new RequisitoCreditos (creditosNecesarios=100)), 
+    estrategiaParaListaDeEspera= new EstrategiaElitista())
+
+    const derechoRomano = new Materia(cupo=1, creditos=100, anio=3, requisito=requisitoAnio2, estrategiaParaListaDeEspera= new EstrategiaGradoDeAvance())
+
+    const requisitoAnio2 = new RequisitoAnio (anioRequerido=2)  //Este requisito requiere siempre una referencia para luego agregar la carrera.
+
+    const politicaAntigua = new Materia (cupo=1, creditos=100, anio=3, requisito=new RequisitoCorrelativas (materias=[derechoRomano]), 
+    estrategiaParaListaDeEspera= new EstrategiaElitista())
+
+    const historiaDelDerechoArgentino = new Materia(cupo=30, creditos=25, anio=1, requisito=null, estrategiaParaListaDeEspera= new EstrategiaOrdenDeLlegada())
+
+    const derechoPenal1 = new Materia(cupo=1, creditos=25, anio=1, requisito=(new RequisitoCorrelativas (materias=[historiaDelDerechoArgentino])), 
+    estrategiaParaListaDeEspera= new EstrategiaGradoDeAvance())
+
+    const derechoPenal2 = new Materia(cupo=1, creditos=50, anio=2, requisito=(new RequisitoCreditos (creditosNecesarios=50)), 
+    estrategiaParaListaDeEspera= new EstrategiaElitista())
+
+    //carrera de derecho
+    const derecho = new Carrera(materiasObligatorias=[latin, /*derechoRomano,*/ historiaDelDerechoArgentino, derechoPenal1, derechoPenal2, politicaAntigua])
+
+    //estudiantes de derecho 
+    const alejandro = new Estudiante (creditosObtenidos=150, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=10), new MateriaAprobada(materia=derechoPenal1, nota=7), new MateriaAprobada(materia=derechoPenal2, nota=8), new MateriaAprobada(materia=latin, nota=9),
+    new MateriaAprobada(materia=derechoRomano, nota=7) ])
+    
+    const camila = new Estudiante (creditosObtenidos=150, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=7), new MateriaAprobada(materia=derechoPenal1, nota=8), new MateriaAprobada(materia=derechoPenal2, nota=8), 
+    new MateriaAprobada(materia=derechoRomano, nota=10) ])
+    
+    const franco = new Estudiante (creditosObtenidos=150, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=7), new MateriaAprobada(materia=derechoPenal1, nota=7), new MateriaAprobada(materia=derechoPenal2, nota=7), new MateriaAprobada(materia=latin, nota=7),
+    new MateriaAprobada(materia=derechoRomano, nota=7) ])
+
+    const juan = new Estudiante (creditosObtenidos=100, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=8), new MateriaAprobada(materia=derechoPenal1, nota=8), new MateriaAprobada(materia=derechoPenal2, nota=10)])
+    
+    const laura = new Estudiante (creditosObtenidos=100, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=7), new MateriaAprobada(materia=derechoPenal1, nota=10), new MateriaAprobada(materia=derechoPenal2, nota=8)])
+
+    const sebastian = new Estudiante (creditosObtenidos=100, carrerasElegidas=[derecho], materiasAprobadas=[ new MateriaAprobada(materia=historiaDelDerechoArgentino,
+    nota=8), new MateriaAprobada(materia=derechoPenal1, nota=9), new MateriaAprobada(materia=derechoPenal2, nota=8)])
+
+
+    method initialize() {
+    requisitoAnio2.carrera(derecho) //Se debe agregar la carrera aqui para evitar el bucle de datos en los objetos creados.
+
+    latin.inscribirA(sebastian)
+    latin.inscribirA(laura)
+    latin.inscribirA(juan)
+
+    
+    politicaAntigua.inscribirA(alejandro)
+    politicaAntigua.inscribirA(camila)
+    politicaAntigua.inscribirA(franco)
+       
+    }
+
+    test "Alejandro se inscribio a politica Antigua" {
+       assert.that(politicaAntigua.estudiantesInscriptos().contains(alejandro))
+    }
+
+    test "Como no hay cupo, Franco es el primero de la lista de espera de politica antigua al tener mas materias aprobadas" {
+        assert.that(politicaAntigua.estudiantesEnEspera().contains(camila))
+        assert.that(politicaAntigua.estudiantesEnEspera().get(1) == franco)
+    }
+
+    test "Como no hay cupo, Juan es el primero de la lista de espera de latin al tener mejor promedio" {
+        assert.that(latin.estudiantesEnEspera().get(1) == juan)
+        assert.that(latin.estudiantesEnEspera().contains(laura))
+
+    }
+
+
+
+} 
+   
