@@ -10,17 +10,7 @@ class EstrategiaElitista {
         self.reordenarEstudiantesEnEsperaDe(materia)
     }
 
-    method reordenarEstudiantesEnEsperaDe(materia) =  materia.estudiantesEnEspera().sortBy({ unEstudiante => unEstudiante.promedioMateriasAprobadas() })
-
-    method aplicarReverseSiEsPosible(materia){
-        if(!self.esLaListaVacia(materia)){
-            self.reordenarEstudiantesEnEsperaDe(materia).reverse()
-        }
-    }
-
-    method esLaListaVacia(materia) = self.reordenarEstudiantesEnEsperaDe(materia).isEmpty()
-
-
+    method reordenarEstudiantesEnEsperaDe(materia) = materia.estudiantesEnEspera().sortedBy({ est1, est2 => est1.promedioMateriasAprobadas() > est2.promedioMateriasAprobadas() })
 }
 
 class EstrategiaGradoDeAvance {
@@ -29,21 +19,14 @@ class EstrategiaGradoDeAvance {
         self.reordenarEstudiantesEnEsperaDe(materia).reverse()
     }
 
-    method reordenarEstudiantesEnEsperaDe(materia) =  materia.estudiantesEnEspera().sortBy({ unEstudiante => unEstudiante.cantMateriasAprobadas() })
-
-    method aplicarReverseSiEsPosible(materia){
-        if(!self.esLaListaVacia(materia)){
-            self.reordenarEstudiantesEnEsperaDe(materia).reverse()
-        }
-    }
-
-    method esLaListaVacia(materia) = self.reordenarEstudiantesEnEsperaDe(materia).isEmpty()
+    method reordenarEstudiantesEnEsperaDe(materia) = materia.estudiantesEnEspera().sortedBy({ est1, est2 => est1.cantMateriasAprobadas() > est2.cantMateriasAprobadas() })
+//            unEstudiante => unEstudiante.cantMateriasAprobadas() })
 }
 
 
-class RequisitoAnio {
+class RequisitoAnio {     //Este requisito debe tener siempre una referencia para agregar la carrera en el initialize, evitando el bucle de datos en los objetos creados.
     const property anioRequerido
-    const property carrera  //La materia con este requisito no debe estar en la lista materias de la carrera que pertenece, sino el codigo falla. 
+    var property carrera = null  
     method cumple(alumno) = self.materiasDelAnioRequerida().all({ materia=> alumno.aprobo(materia) })    //Polimorfica con los otros requisitos
 
     method materiasDelAnioRequerida() = carrera.materiasDeAnio(anioRequerido)

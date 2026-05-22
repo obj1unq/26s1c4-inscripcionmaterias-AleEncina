@@ -2,7 +2,7 @@ class Materia {
     const property cupo
     const property creditos
     const property anio
-    const property requisito                       // new Requisito
+    var property requisito                       // new Requisito
     const estudiantesInscriptos = []
     const property estrategiaParaListaDeEspera      //new estrategia
     const estudiantesEnEspera = []
